@@ -1,0 +1,114 @@
+#include <stdio.h>
+//#include <stdlib.h>
+#include <string.h>
+// 定义账单结构体
+typedef struct {
+    char date[11]; // 日期 YYYY-MM-DD
+    float amount;  // 金额
+    char type[50]; // 类别
+    char note[100]; // 备注
+} Bill;
+// 函数声明
+void printMenu();
+void recordIncome();
+void recordExpense();
+void showBills();
+void checkBills();
+void setMonthlyBudget();
+void showMonthlyReport();
+void exit1();
+int main() {
+    int choice;
+    while (1) {
+        printMenu();
+        printf("请输入选项序号：");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                recordIncome();
+                break;
+            case 2:
+                recordExpense();
+                break;
+            case 3:
+                showBills();
+                break;
+            case 4:
+                checkBills();
+                break;
+            case 5:
+                setMonthlyBudget();
+                break;
+            case 6:
+                showMonthlyReport();
+                break;
+            case 7:
+                exit1();
+                return 0;
+            default:
+                printf("无效的选项，请重新输入。\n");
+        }
+    }
+    return 0;
+}
+void printMenu() {
+    system("cls"); // 清屏
+    printf("=================================\n");
+    printf("欢迎使用个人账单管理系统\n");
+    printf("=================================\n");
+    printf("请选择操作：\n");
+    printf("1. 记录收入\n");
+    printf("2. 记录支出\n");
+    printf("3. 查看所有账单\n");
+    printf("4. 查询账单\n");
+    printf("5. 设置月度预算\n");
+    printf("6. 查看月度统计报告\n");
+    printf("7. 退出系统\n");
+}
+void recordIncome() {
+    Bill income;
+    printf("请输入收入信息：\n");
+    printf("日期（YYYY-MM-DD）：");
+    scanf("%s", income.date);
+    printf("金额：");
+    scanf("%f", &income.amount);
+    if (income.amount < 0) {
+        printf("收入金额不能为负数，请重新输入。\n");
+        return;
+    }
+    printf("类别（如工资、奖金等）：");
+    scanf("%s", income.type);
+    printf("备注：");
+    scanf("%s", income.note);
+    printf("收入已成功记录！\n\n");
+    printf("按任意键返回主菜单...\n");
+    getchar(); // 换行符抵消 
+    getchar(); // 接收用户输入
+}
+void recordExpense(){
+    Bill expense;
+    printf("请输入支出信息：\n");
+    printf("日期（YYYY-MM-DD）：");
+    scanf("%s", expense.date);
+    printf("金额：");
+    scanf("%f", &expense.amount);
+    if (expense.amount < 0) {
+        printf("请重新输入正数。\n");
+        return;
+    }
+    printf("类别（如交通、餐饮等）：");
+    scanf("%s", expense.type);
+    printf("备注：");
+    scanf("%s", expense.note);
+    printf("支出已成功记录！\n\n");
+    printf("按任意键返回主菜单...\n");
+    getchar(); // 换行符抵消 
+    getchar(); // 接收用户输入
+} 
+void showBills(){} 
+void checkBills(){} 
+void setMonthlyBudget(){} 
+void showMonthlyReport(){} 
+void exit1(){
+    printf("已退出使用个人账单管理系统！\n");
+}
