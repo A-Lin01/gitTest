@@ -65,6 +65,7 @@ void printMenu() {
     printf("6. 查看月度统计报告\n");
     printf("7. 退出系统\n");
 }
+//记录收入
 void recordIncome() {
     Bill income;
     printf("请输入收入信息：\n");
@@ -85,6 +86,7 @@ void recordIncome() {
     getchar(); // 换行符抵消 
     getchar(); // 接收用户输入
 }
+//记录支出
 void recordExpense(){
     Bill expense;
     printf("请输入支出信息：\n");
