@@ -8,6 +8,10 @@ typedef struct {
     char type[50]; // 类别
     char note[100]; // 备注
 } Bill;
+
+Bill bills[100];
+int bill_count=0;
+
 // 函数声明
 void printMenu();
 void recordIncome();
@@ -65,7 +69,6 @@ void printMenu() {
     printf("6. 查看月度统计报告\n");
     printf("7. 退出系统\n");
 }
-//记录收入
 void recordIncome() {
     Bill income;
     printf("请输入收入信息：\n");
@@ -73,9 +76,9 @@ void recordIncome() {
     scanf("%s", income.date);
     printf("金额：");
     scanf("%f", &income.amount);
-    if (income.amount < 0) {
-        printf("收入金额不能为负数，请重新输入。\n");
-        return;
+    while (income.amount < 0) {
+        printf("收入金额不能为负数，请重新输入:");
+        scanf("%f", &income.amount);
     }
     printf("类别（如工资、奖金等）：");
     scanf("%s", income.type);
@@ -86,7 +89,6 @@ void recordIncome() {
     getchar(); // 换行符抵消 
     getchar(); // 接收用户输入
 }
-//记录支出
 void recordExpense(){
     Bill expense;
     printf("请输入支出信息：\n");
@@ -94,9 +96,9 @@ void recordExpense(){
     scanf("%s", expense.date);
     printf("金额：");
     scanf("%f", &expense.amount);
-    if (expense.amount < 0) {
-        printf("请重新输入正数。\n");
-        return;
+    while (expense.amount > 0) {
+        printf("请重新输入负数:");
+        scanf("%f", &expense.amount);
     }
     printf("类别（如交通、餐饮等）：");
     scanf("%s", expense.type);
@@ -107,8 +109,41 @@ void recordExpense(){
     getchar(); // 换行符抵消 
     getchar(); // 接收用户输入
 } 
-void showBills(){} 
-void checkBills(){} 
+
+void showBills(){
+	if (bill_count == 0) {
+		printf("无账单记录。\n");
+	} 
+	else {
+	printf("所有账单记录如下：\n");
+	int i; 
+	for ( i=0; i< bill_count; i++ ){
+		printf("日期：%s，金额：%0.2f,类别：%s,备注：%s\n",bills[i].date,bills[i].amount,bills[i].type,bills[i].note);
+	}
+}
+	printf("按任意键返回主菜单...\n");
+	getchar();
+    getchar(); 
+}
+
+void checkBills(){
+	char date[10];
+	printf("请输入要查询的日期（YYYY-MM-DD）：");
+	scanf("%s",date);
+	int found =0;
+	int i;
+	for ( i =0; i<bill_count; i++ ){
+		if ( strcmp(bills[i].date,date) == 0 ){
+			printf("日期：%s，金额：%0.2f,类别：%s,备注：%s\n",bills[i].date,bills[i].amount,bills[i].type,bills[i].note);
+			found=1;
+		}
+	}
+	if (!found) printf("无指定日期的账单记录。\n");
+	printf("按任意键返回主菜单...\n");
+	getchar();
+    getchar(); 
+} 
+
 void setMonthlyBudget(){} 
 void showMonthlyReport(){} 
 void exit1(){
