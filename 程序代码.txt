@@ -11,16 +11,22 @@ typedef struct {
 
 Bill bills[100];
 int bill_count=0;
+float monthly_budget=0;
+float total_income=0;
+float total_expense=0;
 
 // 函数声明
 void printMenu();
+int isValidDate(const char *date) ;
 void recordIncome();
 void recordExpense();
 void showBills();
 void checkBills();
 void setMonthlyBudget();
 void showMonthlyReport();
+void calculateMonthlyTotals();
 void exit1();
+
 int main() {
     int choice;
     while (1) {
@@ -69,11 +75,37 @@ void printMenu() {
     printf("6. 查看月度统计报告\n");
     printf("7. 退出系统\n");
 }
+
+//检查日期是否合理 
+int isValidDate(const char *date) {
+    if (strlen(date) != 10) return 0; // 长度必须是10个字符
+    if (date[4] != '-' || date[7] != '-') return 0; // 第5和第8个字符必须是'-'
+    
+    int year, month, day;
+     if (sscanf(date, "%d-%d-%d", &year, &month, &day) != 3) return 0; 
+    // 检查年月日合理范围内
+    if (year < 1900 || year > 9999) return 0;
+    if (month < 1 || month > 12) return 0;
+    if (day < 1 || day > 31) return 0;
+    
+    // 检查每个月的天数（不考虑闰年）
+    if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30) return 0;
+    if (month == 2 && day > 29) return 0; 
+    
+    return 1; //符合所有检查 
+}
+
+//记录收入 
 void recordIncome() {
     Bill income;
     printf("请输入收入信息：\n");
+    do{ 
     printf("日期（YYYY-MM-DD）：");
     scanf("%s", income.date);
+    if (!isValidDate(income.date)) {
+            printf("日期格式错误，请重新输入。\n");
+        }
+    } while (!isValidDate(income.date));
     printf("金额：");
     scanf("%f", &income.amount);
     while (income.amount < 0) {
@@ -88,12 +120,20 @@ void recordIncome() {
     printf("按任意键返回主菜单...\n");
     getchar(); // 换行符抵消 
     getchar(); // 接收用户输入
+    bills[bill_count++]=income;//将收入记录添加到账单数组  
 }
+
+//记录支出 
 void recordExpense(){
     Bill expense;
     printf("请输入支出信息：\n");
+    do{
     printf("日期（YYYY-MM-DD）：");
     scanf("%s", expense.date);
+    if (!isValidDate(expense.date)) {
+            printf("日期格式错误，请重新输入。\n");
+        }
+    } while (!isValidDate(expense.date));
     printf("金额：");
     scanf("%f", &expense.amount);
     while (expense.amount > 0) {
@@ -108,8 +148,10 @@ void recordExpense(){
     printf("按任意键返回主菜单...\n");
     getchar(); // 换行符抵消 
     getchar(); // 接收用户输入
+    bills[bill_count++]=expense;//将支出记录添加到账单数组
 } 
 
+//查看所有账单 
 void showBills(){
 	if (bill_count == 0) {
 		printf("无账单记录。\n");
@@ -126,6 +168,7 @@ void showBills(){
     getchar(); 
 }
 
+// 查询账单
 void checkBills(){
 	char date[10];
 	printf("请输入要查询的日期（YYYY-MM-DD）：");
@@ -141,11 +184,49 @@ void checkBills(){
 	if (!found) printf("无指定日期的账单记录。\n");
 	printf("按任意键返回主菜单...\n");
 	getchar();
+	getchar(); 
+} 
+
+//设置月度预算 
+void setMonthlyBudget(){
+	printf("请输入月度预算：");
+	scanf("%f",&monthly_budget);
+	while (monthly_budget <= 0 ){
+		printf("预算金额需大于0，请重新输入：");
+		scanf("%f",&monthly_budget);
+	}
+	printf("月度预算设置为 %0.2f \n",monthly_budget);
+	printf("按任意键返回主菜单...\n");
+	getchar();
     getchar(); 
 } 
 
-void setMonthlyBudget(){} 
-void showMonthlyReport(){} 
+//查看月度统计报告 
+void showMonthlyReport(){
+	calculateMonthlyTotals();
+	printf("月度统计报告:\n");
+	printf("总收入：%0.2f\n",total_income);
+	printf("总支出：%0.2f\n",total_expense);
+	printf("剩余预算：%0.2f\n",monthly_budget+total_expense);
+	printf("按任意键返回主菜单...\n");
+	getchar();
+    getchar(); 
+} 
+
+//计算总收入、总支出、 
+void calculateMonthlyTotals(){
+	total_income=0;
+	total_expense=0;
+	int i=0;
+	for(i=0;i<bill_count;i++){
+		if(strcmp(bills[i].note,"收入")==0)
+			total_income += bills[i].amount;
+		else
+			total_expense += bills[i].amount;
+	}
+}
+
+//退出系统 
 void exit1(){
     printf("已退出使用个人账单管理系统！\n");
 }
